@@ -34,11 +34,14 @@
   (let [list-string (clojure.string/split-lines s)]
     (map extract-inside-parens list-string)))
 
+(defn- validate-url [url]
+  (not= nil (re-matches #"https?://recursionist.io/.+" url)))
+
 (defn get-input-output [url]
   (let [driver (e/chrome)]
     (try
       ;; validation of url
-      (when-not (re-matches #"https?://.+" url)
+      (when-not (validate-url url)
         (throw (ex-info "Invalid URL" {:url url})))
 
       ;; login

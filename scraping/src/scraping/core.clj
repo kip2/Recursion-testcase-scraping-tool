@@ -20,7 +20,6 @@
   (e/wait driver 2)
   (e/go driver url)
   (e/get-element-text driver {:css "#object-creator-div > div.py-3.my-0.mr-0 > div.p-3.testcaseBox"}))
-  ;; (e/get-element-text driver {:xpath "//*[@id='object-creator-div']/div[1]/div[2]"}))
 
 (defn- extract-after-allow [s]
   (second (re-find #"--> (.*)"  s)))
@@ -39,7 +38,7 @@
 (defn- validate-url [url]
   (not= nil (re-matches #"https?://recursionist.io/dashboard/problems/.*" url)))
 
-(defn get-input-output [driver url]
+(defn get-testcase-value [driver url]
   ;; extract strings
   (let [testcase-string (get-testcase-string driver url)
         inputs (extract-input-strings testcase-string)
@@ -53,7 +52,7 @@
       ;; login
       (login driver)
 
-      (doall (map #(get-input-output driver %) urls))
+      (doall (map #(get-testcase-value driver %) urls))
       (catch Exception e
         (throw e))
       (finally (e/quit driver)))))

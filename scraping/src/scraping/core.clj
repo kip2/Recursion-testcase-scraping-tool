@@ -35,15 +35,11 @@
     (map extract-inside-parens list-string)))
 
 (defn- validate-url [url]
-  (not= nil (re-matches #"https?://recursionist.io/.+" url)))
+  (not= nil (re-matches #"https?://recursionist.io/dashboard/problems/.*" url)))
 
 (defn get-input-output [url]
   (let [driver (e/chrome)]
     (try
-      ;; validation of url
-      (when-not (validate-url url)
-        (throw (ex-info "Invalid URL" {:url url})))
-
       ;; login
       (login driver)
 
@@ -56,6 +52,37 @@
       (catch Exception e
         (throw e))
       (finally (e/quit driver)))))
+
+(def supported-url-format "https://recursionist.io/dashboard/problems/")
+
+(defn process-url [url]
+  (if-not (validate-url url)
+    (do (println "RecursionのURL形式にのみ対応しています。")
+        (println "対応している形式: " supported-url-format))
+    (println "Processing URL:" url)))
+
+(defn args-empty []
+  (do (println "引数として、少なくとも1つのURLを指定してください。")
+      (println "(RecursionのURL形式のみ対応しています。)")
+      (println "(RecursionのURL：" supported-url-format ")")
+      (println "使いかた: java -jar problem-value-scraping.jar https://recursionist.io/dashboard/problems/1")))
+
+(defn -main [& args]
+  (if (empty? args)
+    (args-empty)
+    (doseq [url args]
+      (process-url url))))
+
+;; 引数なし
+(-main)
+
+;; 有効でないURLの引数
+(-main "https://recursionist.io/")
+
+;; 有効なURLの引数
+(-main supported-url-format)
+
+
 
 ;; ~~~~~~~~~~~~~~
 ;; usage

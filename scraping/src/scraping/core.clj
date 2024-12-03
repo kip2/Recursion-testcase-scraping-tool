@@ -18,7 +18,8 @@
 
 (defn- get-testcase-string [driver url]
   (e/go driver url)
-  (e/get-element-text driver {:xpath "//*[@id='object-creator-div']/div[1]/div[2]"}))
+  (e/get-element-text driver {:css "#object-creator-div > div.py-3.my-0.mr-0 > div.p-3.testcaseBox"}))
+  ;; (e/get-element-text driver {:xpath "//*[@id='object-creator-div']/div[1]/div[2]"}))
 
 (defn- extract-after-allow [s]
   (second (re-find #"--> (.*)"  s)))
@@ -37,18 +38,21 @@
 (defn- validate-url [url]
   (not= nil (re-matches #"https?://recursionist.io/dashboard/problems/.*" url)))
 
-(defn get-input-output [url]
+(defn get-input-output [driver url]
+  ;; extract strings
+  (let [testcase-string (get-testcase-string driver url)
+        inputs (extract-input-strings testcase-string)
+        outputs (extract-output-strings testcase-string)]
+          ;; return map
+    {:inputs inputs :outputs outputs}))
+
+(defn main-process [urls]
   (let [driver (e/chrome)]
     (try
       ;; login
       (login driver)
 
-      ;; extract strings
-      (let [testcase-string (get-testcase-string driver url)
-            inputs (extract-input-strings testcase-string)
-            outputs (extract-output-strings testcase-string)]
-          ;; return map
-        {:inputs inputs :outputs outputs})
+      (doall (map #(get-input-output driver %) urls))
       (catch Exception e
         (throw e))
       (finally (e/quit driver)))))
@@ -70,8 +74,8 @@
 (defn -main [& args]
   (if (empty? args)
     (args-empty)
-    (doseq [url args]
-      (process-url url))))
+    (let [value-map (main-process args)]
+      (println value-map))))
 
 ;; 引数なし
 (-main)
@@ -80,6 +84,21 @@
 (-main "https://recursionist.io/")
 
 ;; 有効なURLの引数
+(-main (str supported-url-format "1"))
+
+
+;; 複数URLのテスト
+(-main
+ (str supported-url-format "1")
+ (str supported-url-format "2")
+ (str supported-url-format "3")
+ (str supported-url-format "4")
+ (str supported-url-format "5")
+ (str supported-url-format "6")
+ (str supported-url-format "7")
+ (str supported-url-format "8"))
+
+
 (-main supported-url-format)
 
 

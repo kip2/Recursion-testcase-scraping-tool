@@ -17,6 +17,7 @@
   (e/click driver [{:id :loginModal} {:tag :button :type :submit}]))
 
 (defn- get-testcase-string [driver url]
+  (e/wait driver 1)
   (e/go driver url)
   (e/get-element-text driver {:css "#object-creator-div > div.py-3.my-0.mr-0 > div.p-3.testcaseBox"}))
   ;; (e/get-element-text driver {:xpath "//*[@id='object-creator-div']/div[1]/div[2]"}))
@@ -97,6 +98,7 @@
  (str supported-url-format "6")
  (str supported-url-format "7")
  (str supported-url-format "8"))
+
 
 
 (-main supported-url-format)

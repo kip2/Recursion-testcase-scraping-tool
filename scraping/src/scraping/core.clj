@@ -49,12 +49,11 @@
         inputs (extract-input-strings testcase-string)
         outputs (extract-output-strings testcase-string)]
           ;; return map
-    {:inputs inputs :outputs outputs}))
+    {:url url :inputs inputs :outputs outputs}))
 
 (defn main-process [urls]
   (let [driver (e/chrome)]
     (try
-      ;; login
       (login driver)
 
       (doall (map #(get-testcase-value driver %) urls))
@@ -69,7 +68,6 @@
       (println "RecursionのURL形式のみ対応しています。")
       (println "RecursionのURL形式:" supported-url-format)
       (println "使いかた: java -jar problem-value-scraping.jar https://recursionist.io/dashboard/problems/1")))
-
 
 (defn -main [& args]
   (let [validation-result (validate-args args)]
@@ -93,7 +91,7 @@
 
 
 ;; 有効なURLの引数
-;; (-main (str supported-url-format "1"))
+(-main (str supported-url-format "1"))
 
 
 ;; ~~~~~~~~~~~~~~

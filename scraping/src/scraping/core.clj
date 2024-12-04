@@ -4,6 +4,8 @@
             [dotenv :as env]
             [etaoin.api :as e]))
 
+(def supported-url-format "https://recursionist.io/dashboard/problems/")
+
 (defn- login [driver]
   (e/go driver "https://recursionist.io/")
   (e/set-window-size driver {:width 1280 :height 800})
@@ -57,25 +59,33 @@
         (throw e))
       (finally (e/quit driver)))))
 
-(def supported-url-format "https://recursionist.io/dashboard/problems/")
+;; todo: 取得したマップに、URL情報を加えてデータとして保存する
+;; todo: データ形式が数値の場合は、文字列ではなく数字で取得したいと思う
 
-(defn process-url [url]
-  (if-not (validate-url url)
-    (do (println "RecursionのURL形式にのみ対応しています。")
-        (println "対応している形式: " supported-url-format))
-    (println "Processing URL:" url)))
 
 (defn args-empty []
   (do (println "引数として、少なくとも1つのURLを指定してください。")
       (println "(RecursionのURL形式のみ対応しています。)")
-      (println "(RecursionのURL：" supported-url-format ")")
+      (println "(RecursionのURL：" supported-url-format
+               ")")
       (println "使いかた: java -jar problem-value-scraping.jar https://recursionist.io/dashboard/problems/1")))
 
+(defn validate-args [args]
+  (or (some #(when (not (validate-url %)) %) args) true))
+
 (defn -main [& args]
-  (if (empty? args)
-    (args-empty)
-    (let [value-map (main-process args)]
-      (println value-map))))
+  (let [validation-result (validate-args args)]
+    (cond
+      (empty? args) (args-empty)
+
+      (not (true? validation-result))
+      (do
+        (println "RecursionのURL形式になっていません。")
+        (println "エラー対象の引数:" validation-result)
+        (println "対応している形式: " supported-url-format))
+
+      :else (let [value-map (main-process args)]
+              (println value-map)))))
 
 ;; 引数なし
 (-main)
@@ -84,21 +94,18 @@
 (-main "https://recursionist.io/")
 
 ;; 有効なURLの引数
-(-main (str supported-url-format "1"))
+;; (-main (str supported-url-format "1"))
 
 ;; 複数URLのテスト
-(-main
- (str supported-url-format "1")
- (str supported-url-format "2")
- (str supported-url-format "3")
- (str supported-url-format "4")
- (str supported-url-format "5")
- (str supported-url-format "6")
- (str supported-url-format "7")
- (str supported-url-format "8"))
-
-
-(-main supported-url-format)
+;; (-main
+;;  (str supported-url-format "1")
+;;  (str supported-url-format "2")
+;;  (str supported-url-format "3")
+;;  (str supported-url-format "4")
+;;  (str supported-url-format "5")
+;;  (str supported-url-format "6")
+;;  (str supported-url-format "7")
+;;  (str supported-url-format "8"))
 
 
 

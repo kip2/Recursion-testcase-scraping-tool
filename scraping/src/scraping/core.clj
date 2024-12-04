@@ -23,21 +23,21 @@
   (e/go driver url)
   (e/get-element-text driver {:css "#object-creator-div > div.py-3.my-0.mr-0 > div.p-3.testcaseBox"}))
 
-(defn- extract-after-allow [s]
+(defn extract-after-allow [s]
   (second (re-find #"--> (.*)"  s)))
 
 (defn- extract-output-strings [s]
   (let [list-string (clojure.string/split-lines s)]
     (map extract-after-allow list-string)))
 
-(defn- extract-inside-parens [s]
+(defn extract-inside-parens [s]
   (second (re-find #"\((.*?)\)" s)))
 
 (defn- extract-input-strings [s]
   (let [list-string (clojure.string/split-lines s)]
     (map extract-inside-parens list-string)))
 
-(defn- validate-url [url]
+(defn validate-url [url]
   (not= nil (re-matches #"https?://recursionist.io/dashboard/problems/.*" url)))
 
 (defn get-testcase-value [driver url]
@@ -60,14 +60,11 @@
       (finally (e/quit driver)))))
 
 ;; todo: 取得したマップに、URL情報を加えてデータとして保存する
-;; todo: データ形式が数値の場合は、文字列ではなく数字で取得したいと思う
-
 
 (defn args-empty []
   (do (println "引数として、少なくとも1つのURLを指定してください。")
-      (println "(RecursionのURL形式のみ対応しています。)")
-      (println "(RecursionのURL：" supported-url-format
-               ")")
+      (println "RecursionのURL形式のみ対応しています。")
+      (println "RecursionのURL形式:" supported-url-format)
       (println "使いかた: java -jar problem-value-scraping.jar https://recursionist.io/dashboard/problems/1")))
 
 (defn validate-args [args]
@@ -93,20 +90,9 @@
 ;; 有効でないURLの引数
 (-main "https://recursionist.io/")
 
+
 ;; 有効なURLの引数
 ;; (-main (str supported-url-format "1"))
-
-;; 複数URLのテスト
-;; (-main
-;;  (str supported-url-format "1")
-;;  (str supported-url-format "2")
-;;  (str supported-url-format "3")
-;;  (str supported-url-format "4")
-;;  (str supported-url-format "5")
-;;  (str supported-url-format "6")
-;;  (str supported-url-format "7")
-;;  (str supported-url-format "8"))
-
 
 
 ;; ~~~~~~~~~~~~~~

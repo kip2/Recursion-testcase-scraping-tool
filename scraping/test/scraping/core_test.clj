@@ -44,3 +44,14 @@
     (is (= (split-into-list ["123" "310"]) ["123" "310"]))
     (is (= (split-into-list ["" ""]) ["" ""]))))
 
+(deftest parse-numbers-test
+  (testing
+   (is (= (parse-numbers ["1" "2" "3"]) [1 2 3]))
+    (is (= (parse-numbers ["1.2" "2.5" "3.4"]) [1.2 2.5 3.4]))
+    (is (= (parse-numbers ["1" "2.3" "3"]) [1 2.3 3]))
+    (is (= (parse-numbers ["1" "2.3" "Hello" "abc"]) [1 2.3 "Hello" "abc"]))
+    (is (= (parse-numbers ["" ""]) ["" ""]))
+    (is (= (parse-numbers ["1e10" "NaN"]) ["1e10" "NaN"]))
+    (is (= (parse-numbers []) []))
+    (is (= (parse-numbers nil) '()))))
+

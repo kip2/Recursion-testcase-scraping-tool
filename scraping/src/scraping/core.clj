@@ -56,11 +56,23 @@
   (with-open [wtr (io/writer filepath)]
     (json/generate-stream data wtr {:pretty true})))
 
+(defn parse-numbers [data]
+  (map #(try
+          (cond
+            (re-matches #"\d+\.\d+" %) (Double/parseDouble %)
+            (re-matches #"\d+" %) (Integer/parseInt %)
+            :else %)
+          (catch Exception _ %))
+       data))
+
+
 (defn get-testcase-value [driver url]
   ;; extract strings
   (let [testcase-string (get-testcase-string driver url)
-        inputs (split-into-list (extract-input-strings testcase-string))
-        outputs (split-into-list (extract-output-strings testcase-string))]
+        inputs (->  (extract-input-strings testcase-string)
+                    split-into-list)
+        outputs (-> (extract-output-strings testcase-string)
+                    split-into-list)]
           ;; return map
     {:url url :inputs inputs :outputs outputs}))
 
@@ -96,7 +108,12 @@
       :else (let [value-map (main-process args)]
               (write-json-file value-map output-filepath)))))
 
-()
+(defn read-json-file [filepath]
+  (with-open [rdr (io/reader filepath)]
+    (json/parse-stream rdr true)))
+
+(read-json-file output-filepath)
+
 
 ; 引数なし
 (-main)

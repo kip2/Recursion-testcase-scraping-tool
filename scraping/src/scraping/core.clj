@@ -46,7 +46,7 @@
 (defn validate-args [args]
   (or (some #(when (not (validate-url %)) %) args) true))
 
-(defn split-into-list [data]
+(defn split-comma-into-list [data]
   (map #(if (str/includes? % ",")
           (str/split % #",")
           %)
@@ -72,10 +72,10 @@
   ;; extract strings
   (let [testcase-string (get-testcase-string driver url)
         inputs (->  (extract-input-strings testcase-string)
-                    split-into-list
+                    split-comma-into-list
                     parse-numbers)
         outputs (-> (extract-output-strings testcase-string)
-                    split-into-list
+                    split-comma-into-list
                     parse-numbers)]
           ;; return map
     {:url url :inputs inputs :outputs outputs}))

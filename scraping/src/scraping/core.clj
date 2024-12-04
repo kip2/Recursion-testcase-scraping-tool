@@ -2,6 +2,7 @@
   (:gen-class)
   (:require [clojure.string :as str]
             [dotenv :as env]
+            [cheshire.core :as json]
             [etaoin.api :as e]))
 
 (def supported-url-format "https://recursionist.io/dashboard/problems/")
@@ -43,11 +44,14 @@
 (defn validate-args [args]
   (or (some #(when (not (validate-url %)) %) args) true))
 
+(defn split-into-list [data]
+  (map #(str/split % #",") data))
+
 (defn get-testcase-value [driver url]
   ;; extract strings
   (let [testcase-string (get-testcase-string driver url)
-        inputs (extract-input-strings testcase-string)
-        outputs (extract-output-strings testcase-string)]
+        inputs (split-into-list (extract-input-strings testcase-string))
+        outputs (split-into-list (extract-output-strings testcase-string))]
           ;; return map
     {:url url :inputs inputs :outputs outputs}))
 
@@ -89,9 +93,9 @@
 ;; 有効でないURLの引数
 (-main "https://recursionist.io/")
 
-
 ;; 有効なURLの引数
 (-main (str supported-url-format "1"))
+
 
 
 ;; ~~~~~~~~~~~~~~

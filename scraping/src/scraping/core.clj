@@ -80,6 +80,8 @@
       (println "RecursionのURL形式:" supported-url-format)
       (println "使いかた: java -jar problem-value-scraping.jar https://recursionist.io/dashboard/problems/1")))
 
+(def output-filepath "testcase.json")
+
 (defn -main [& args]
   (let [validation-result (validate-args args)]
     (cond
@@ -92,9 +94,11 @@
         (println "対応している形式: " supported-url-format))
 
       :else (let [value-map (main-process args)]
-              (write-json-file value-map "testcase.json")))))
+              (write-json-file value-map output-filepath)))))
 
-;; 引数なし
+()
+
+; 引数なし
 (-main)
 
 ;; 有効でないURLの引数

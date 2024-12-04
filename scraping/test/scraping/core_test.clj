@@ -57,5 +57,15 @@
 
   (testing "Nested list inputs"
     (is (= (parse-numbers [["1" "2"] ["3.4" "text"]]) [[1 2] [3.4 "text"]]))
-    (is (= (parse-numbers [["42" ["nested" ["1" "2"]]]]) [[42 ["nested" [1 2]]]]))))
+    (is (= (parse-numbers [["42" ["nested" ["1" "2"]]]]) [[42 ["nested" [1 2]]]]))
+
+    (testing "Flat list inputs with signed numbers"
+      (is (= (parse-numbers ["-1" "+2" "3"]) [-1 2 3]))
+      (is (= (parse-numbers ["-2.3" "+3.4"]) [-2.3 3.4])))
+
+    (testing "Nested list inputs with signed numbers"
+      (is (= (parse-numbers [["-1" "+2"] ["-3.4" "+4.5"]]) [[-1 2] [-3.4 4.5]])))
+
+    (testing "Special cases"
+      (is (= (parse-numbers ["--1" "++2.3" "NaN"]) ["--1" "++2.3" "NaN"])))))
 

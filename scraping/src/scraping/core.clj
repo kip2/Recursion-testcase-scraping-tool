@@ -61,11 +61,12 @@
           (parse-numbers %)
           (try
             (cond
-              (re-matches #"\d+\.\d+" %) (Double/parseDouble %)
-              (re-matches #"\d+" %) (Integer/parseInt %)
+              (re-matches #"[-+]?\d+\.\d+" %) (Double/parseDouble %)
+              (re-matches #"[-+]?\d+" %) (Integer/parseInt %)
               :else %)
             (catch Exception _ %)))
        data))
+
 
 (defn get-testcase-value [driver url]
   ;; extract strings

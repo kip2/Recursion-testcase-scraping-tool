@@ -53,5 +53,9 @@
     (is (= (parse-numbers ["" ""]) ["" ""]))
     (is (= (parse-numbers ["1e10" "NaN"]) ["1e10" "NaN"]))
     (is (= (parse-numbers []) []))
-    (is (= (parse-numbers nil) '()))))
+    (is (= (parse-numbers nil) '())))
+
+  (testing "Nested list inputs"
+    (is (= (parse-numbers [["1" "2"] ["3.4" "text"]]) [[1 2] [3.4 "text"]]))
+    (is (= (parse-numbers [["42" ["nested" ["1" "2"]]]]) [[42 ["nested" [1 2]]]]))))
 

@@ -57,22 +57,25 @@
     (json/generate-stream data wtr {:pretty true})))
 
 (defn parse-numbers [data]
-  (map #(try
-          (cond
-            (re-matches #"\d+\.\d+" %) (Double/parseDouble %)
-            (re-matches #"\d+" %) (Integer/parseInt %)
-            :else %)
-          (catch Exception _ %))
+  (map #(if (sequential? %)
+          (parse-numbers %)
+          (try
+            (cond
+              (re-matches #"\d+\.\d+" %) (Double/parseDouble %)
+              (re-matches #"\d+" %) (Integer/parseInt %)
+              :else %)
+            (catch Exception _ %)))
        data))
-
 
 (defn get-testcase-value [driver url]
   ;; extract strings
   (let [testcase-string (get-testcase-string driver url)
         inputs (->  (extract-input-strings testcase-string)
-                    split-into-list)
+                    split-into-list
+                    parse-numbers)
         outputs (-> (extract-output-strings testcase-string)
-                    split-into-list)]
+                    split-into-list
+                    parse-numbers)]
           ;; return map
     {:url url :inputs inputs :outputs outputs}))
 
@@ -111,8 +114,6 @@
 (defn read-json-file [filepath]
   (with-open [rdr (io/reader filepath)]
     (json/parse-stream rdr true)))
-
-(read-json-file output-filepath)
 
 
 ; 引数なし

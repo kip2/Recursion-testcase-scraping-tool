@@ -112,11 +112,6 @@
       :else (let [value-map (main-process args)]
               (write-json-file value-map output-filepath)))))
 
-(defn read-json-file [filepath]
-  (with-open [rdr (io/reader filepath)]
-    (json/parse-stream rdr true)))
-
-
 ; 引数なし
 (-main)
 
@@ -132,34 +127,6 @@
  (str supported-url-format "2")
  (str supported-url-format "3")
  (str supported-url-format "4")
- (str supported-url-format "5"))
-
-
-
-(def data {:name "Alice"
-           :age 17
-           :hobbies ["reading" "coding"]})
-
-(println (json/generate-string data {:pretty true}))
-
-(def testcase-data {:url "https://recursionist.io/dashboard/problems/1" :inputs '([3 2] [2 10] [18 5] [8 14] [20 5]) :outputs '(1 -8 13 -6 15)})
-(println (json/generate-string testcase-data {:pretty true}))
-
-(write-json-file testcase-data "Recursion_testcase.json")
-
-
-
-;; ~~~~~~~~~~~~~~
-;; usage
-;; ~~~~~~~~~~~~~~
-
-;; prepare url
-;; (def url "https://recursionist.io/dashboard/problems/8")
-
-;; execute function & get return map
-;; (def expected (get-input-output url))
-
-;; confirmation
-;; (println expected)
-; {:inputs ("hello" "Good morning" "1234"), :outputs (o g 4)}
+ (str supported-url-format "5")
+ (str supported-url-format "8"))
 

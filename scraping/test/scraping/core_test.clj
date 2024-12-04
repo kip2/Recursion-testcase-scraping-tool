@@ -38,4 +38,9 @@
      (is (= (validate-args false-args) "https://validation.io/dashboard/problems/2"))
      (is (= (validate-args empty-args) true)))))
 
+(deftest split-into-list-test
+  (testing
+   (is (= (split-into-list ["1,2,3" "3,10"]) [["1" "2" "3"] ["3" "10"]]))
+    (is (= (split-into-list ["123" "310"]) ["123" "310"]))
+    (is (= (split-into-list ["" ""]) ["" ""]))))
 

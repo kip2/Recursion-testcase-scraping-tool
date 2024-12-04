@@ -1,9 +1,11 @@
 (ns scraping.core
   (:gen-class)
-  (:require [clojure.string :as str]
-            [dotenv :as env]
-            [cheshire.core :as json]
-            [etaoin.api :as e]))
+  (:require
+   [cheshire.core :as json]
+   [clojure.java.io :as io]
+   [clojure.string :as str]
+   [dotenv :as env]
+   [etaoin.api :as e]))
 
 (def supported-url-format "https://recursionist.io/dashboard/problems/")
 
@@ -45,7 +47,10 @@
   (or (some #(when (not (validate-url %)) %) args) true))
 
 (defn split-into-list [data]
-  (map #(str/split % #",") data))
+  (map #(if (str/includes? % ",")
+          (str/split % #",")
+          %)
+       data))
 
 (defn get-testcase-value [driver url]
   ;; extract strings
@@ -73,6 +78,10 @@
       (println "RecursionのURL形式:" supported-url-format)
       (println "使いかた: java -jar problem-value-scraping.jar https://recursionist.io/dashboard/problems/1")))
 
+(defn write-json-file [data filepath]
+  (with-open [wtr (io/writer filepath)]
+    (json/generate-stream data wtr {:pretty true})))
+
 (defn -main [& args]
   (let [validation-result (validate-args args)]
     (cond
@@ -85,7 +94,10 @@
         (println "対応している形式: " supported-url-format))
 
       :else (let [value-map (main-process args)]
-              (println value-map)))))
+              (write-json-file value-map "testcase.json")))))
+
+
+
 
 ;; 引数なし
 (-main)
@@ -93,8 +105,29 @@
 ;; 有効でないURLの引数
 (-main "https://recursionist.io/")
 
+(-main
+ (str supported-url-format "5"))
+
 ;; 有効なURLの引数
-(-main (str supported-url-format "1"))
+(-main
+ (str supported-url-format "1")
+ (str supported-url-format "2")
+ (str supported-url-format "3")
+ (str supported-url-format "4")
+ (str supported-url-format "5"))
+
+
+
+(def data {:name "Alice"
+           :age 17
+           :hobbies ["reading" "coding"]})
+
+(println (json/generate-string data {:pretty true}))
+
+(def testcase-data {:url "https://recursionist.io/dashboard/problems/1" :inputs '([3 2] [2 10] [18 5] [8 14] [20 5]) :outputs '(1 -8 13 -6 15)})
+(println (json/generate-string testcase-data {:pretty true}))
+
+(write-json-file testcase-data "Recursion_testcase.json")
 
 
 

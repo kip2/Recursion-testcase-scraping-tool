@@ -40,6 +40,9 @@
 (defn validate-url [url]
   (not= nil (re-matches #"https?://recursionist.io/dashboard/problems/.*" url)))
 
+(defn validate-args [args]
+  (or (some #(when (not (validate-url %)) %) args) true))
+
 (defn get-testcase-value [driver url]
   ;; extract strings
   (let [testcase-string (get-testcase-string driver url)
@@ -67,8 +70,6 @@
       (println "RecursionのURL形式:" supported-url-format)
       (println "使いかた: java -jar problem-value-scraping.jar https://recursionist.io/dashboard/problems/1")))
 
-(defn validate-args [args]
-  (or (some #(when (not (validate-url %)) %) args) true))
 
 (defn -main [& args]
   (let [validation-result (validate-args args)]

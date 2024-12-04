@@ -52,6 +52,10 @@
           %)
        data))
 
+(defn write-json-file [data filepath]
+  (with-open [wtr (io/writer filepath)]
+    (json/generate-stream data wtr {:pretty true})))
+
 (defn get-testcase-value [driver url]
   ;; extract strings
   (let [testcase-string (get-testcase-string driver url)
@@ -70,17 +74,11 @@
         (throw e))
       (finally (e/quit driver)))))
 
-;; todo: 取得したマップに、URL情報を加えてデータとして保存する
-
 (defn args-empty []
   (do (println "引数として、少なくとも1つのURLを指定してください。")
       (println "RecursionのURL形式のみ対応しています。")
       (println "RecursionのURL形式:" supported-url-format)
       (println "使いかた: java -jar problem-value-scraping.jar https://recursionist.io/dashboard/problems/1")))
-
-(defn write-json-file [data filepath]
-  (with-open [wtr (io/writer filepath)]
-    (json/generate-stream data wtr {:pretty true})))
 
 (defn -main [& args]
   (let [validation-result (validate-args args)]
@@ -95,9 +93,6 @@
 
       :else (let [value-map (main-process args)]
               (write-json-file value-map "testcase.json")))))
-
-
-
 
 ;; 引数なし
 (-main)

@@ -69,7 +69,6 @@
 
 
 (defn get-testcase-value [driver url]
-  ;; extract strings
   (let [testcase-string (get-testcase-string driver url)
         inputs (->  (extract-input-strings testcase-string)
                     split-comma-into-list
@@ -77,7 +76,6 @@
         outputs (-> (extract-output-strings testcase-string)
                     split-comma-into-list
                     parse-numbers)]
-          ;; return map
     {:url url :inputs inputs :outputs outputs}))
 
 (defn main-process [urls]

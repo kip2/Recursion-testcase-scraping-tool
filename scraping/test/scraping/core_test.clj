@@ -5,6 +5,7 @@
 (deftest extract-after-allow-test
   (testing
    (is (= (extract-after-allow "--> test") "test"))
+    (is (= (extract-after-allow "") nil))
     (is (= (extract-after-allow "-->") nil))))
 
 (deftest extract-inside-parens-test
@@ -36,3 +37,5 @@
      (is (= (validate-args true-args) true))
      (is (= (validate-args false-args) "https://validation.io/dashboard/problems/2"))
      (is (= (validate-args empty-args) true)))))
+
+

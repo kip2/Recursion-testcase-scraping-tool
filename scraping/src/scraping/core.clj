@@ -7,7 +7,12 @@
    [dotenv :as env]
    [etaoin.api :as e]))
 
+;; url format
 (def supported-url-format "https://recursionist.io/dashboard/problems/")
+
+;; filepath
+(def default-filepath "./testcase.json")
+(def default-output-filename "testcase.json")
 
 (defn- login [driver]
   (e/go driver "https://recursionist.io/")
@@ -53,8 +58,12 @@
        data))
 
 (defn write-json-file [data filepath]
-  (with-open [wtr (io/writer filepath)]
-    (json/generate-stream data wtr {:pretty true})))
+  (let [dir (io/file (.getParent (io/file filepath)))]
+    (when (not (.exists dir))
+      (.mkdirs dir))
+    (with-open [wtr (io/writer filepath)]
+      (json/generate-stream data wtr {:pretty true}))))
+
 
 (defn parse-numbers [data]
   (map #(if (sequential? %)
@@ -94,10 +103,18 @@
       (println "RecursionのURL形式:" supported-url-format)
       (println "使いかた: java -jar problem-value-scraping.jar https://recursionist.io/dashboard/problems/1")))
 
-(def output-filepath "testcase.json")
+(defn read-env-filepath []
+  (env/env :OUTPUT_FILEPATH))
+
+(defn create-output-filepath [env-path]
+  (if (and env-path (str/ends-with? env-path "/"))
+    (str env-path default-output-filename)
+    (or (when  (not (str/blank? env-path)) env-path)
+        default-filepath)))
 
 (defn -main [& args]
-  (let [validation-result (validate-args args)]
+  (let [validation-result (validate-args args)
+        output-filepath (create-output-filepath (read-env-filepath))]
     (cond
       (empty? args) (args-empty)
 
@@ -110,21 +127,22 @@
       :else (let [value-map (main-process args)]
               (write-json-file value-map output-filepath)))))
 
+
 ; 引数なし
 (-main)
 
 ;; 有効でないURLの引数
 (-main "https://recursionist.io/")
 
-(-main
- (str supported-url-format "5"))
+;; (-main
+;;  (str supported-url-format "5"))
 
 ;; 有効なURLの引数
-(-main
- (str supported-url-format "1")
- (str supported-url-format "2")
- (str supported-url-format "3")
- (str supported-url-format "4")
- (str supported-url-format "5")
- (str supported-url-format "8"))
+;; (-main
+;;  (str supported-url-format "1")
+;;  (str supported-url-format "2")
+;;  (str supported-url-format "3")
+;;  (str supported-url-format "4")
+;;  (str supported-url-format "5")
+;;  (str supported-url-format "8"))
 

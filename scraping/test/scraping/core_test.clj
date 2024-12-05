@@ -69,3 +69,10 @@
     (testing "Special cases"
       (is (= (parse-numbers ["--1" "++2.3" "NaN"]) ["--1" "++2.3" "NaN"])))))
 
+(deftest create-output-filepath-test
+  (testing
+   (is (= (create-output-filepath nil) "./testcase.json"))
+    (is (= (create-output-filepath "./a/b/c/test.json") "./a/b/c/test.json"))
+    (is (= (create-output-filepath "./a/b/c/") "./a/b/c/testcase.json"))
+    (is (= (create-output-filepath "") "./testcase.json"))))
+   

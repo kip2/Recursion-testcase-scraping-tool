@@ -116,7 +116,7 @@
 
 (def cli-options
   [["-h" "--help" "Show help."]
-   ["-v" "--verbose" "Unset headless mode."]])
+   ["-d" "--disabled-headless" "Disabled headless mode."]])
 
 (defn parse-args [args]
   (let [{:keys [options arguments summary errors]} (cli/parse-opts args cli-options)]
@@ -154,7 +154,7 @@
 
 ;; (-main
 ;;  (str supported-url-format "5")
-;;  "-v")
+;;  "-d")
 
 ;; (-main
 ;;  (str supported-url-format "5"))
@@ -167,5 +167,5 @@
 ;;  (str supported-url-format "4")
 ;;  (str supported-url-format "5")
 ;;  (str supported-url-format "8")
-;;  "-v")
+;;  "-d")
 

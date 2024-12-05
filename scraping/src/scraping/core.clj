@@ -3,6 +3,7 @@
   (:require
    [cheshire.core :as json]
    [clojure.java.io :as io]
+   [clojure.tools.cli :as cli]
    [clojure.string :as str]
    [dotenv :as env]
    [etaoin.api :as e]))
@@ -87,8 +88,8 @@
                     parse-numbers)]
     {:url url :inputs inputs :outputs outputs}))
 
-(defn main-process [urls]
-  (let [driver (e/chrome)]
+(defn main-process [urls not-headless?]
+  (let [driver (if not-headless?  (e/chrome) (e/chrome {:args ["--headless"]}))]
     (try
       (login driver)
 
@@ -112,27 +113,47 @@
     (str/ends-with? env-path "/") (str env-path default-output-filename)
     :else env-path))
 
+(def cli-options
+  [["-h" "--help" "Show help."]
+   ["-v" "--verbose" "Unset headless mode."]])
+
+(defn parse-args [args]
+  (let [{:keys [options arguments summary errors]} (cli/parse-opts args cli-options)]
+    {:options options
+     :arguments arguments
+     :summary summary
+     :errors errors}))
+
 (defn -main [& args]
-  (let [validation-result (validate-args args)
-        output-filepath (create-output-filepath (read-env-filepath))]
-    (cond
-      (empty? args) (args-empty)
+  (let [parsed-args (parse-args args)
+        help? (get-in parsed-args [:options :help])
+        args (get-in parsed-args [:arguments])
+        not-headless? (get-in parsed-args [:options :verbose])]
+    (cond help? (println (get-in parsed-args [:summary]))
+          :else
+          (let [validation-result (validate-args args)
+                output-filepath (create-output-filepath (read-env-filepath))]
+            (cond
+              (empty? args) (args-empty)
 
-      (not (true? validation-result))
-      (do
-        (println "RecursionのURL形式になっていません。")
-        (println "エラー対象の引数:" validation-result)
-        (println "対応している形式: " supported-url-format))
+              (not (true? validation-result))
+              (do
+                (println "RecursionのURL形式になっていません。")
+                (println "エラー対象の引数:" validation-result)
+                (println "対応している形式: " supported-url-format))
 
-      :else (let [value-map (main-process args)]
-              (write-json-file value-map output-filepath)))))
-
+              :else (let [value-map (main-process args not-headless?)]
+                      (write-json-file value-map output-filepath)))))))
 
 ; 引数なし
 (-main)
 
 ;; 有効でないURLの引数
 (-main "https://recursionist.io/")
+
+;; (-main
+;;  (str supported-url-format "5")
+;;  "-v")
 
 ;; (-main
 ;;  (str supported-url-format "5"))

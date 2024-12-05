@@ -86,6 +86,7 @@
         outputs (-> (extract-output-strings testcase-string)
                     split-comma-into-list
                     parse-numbers)]
+    (println "Success! Retrieved the following URL: " url)
     {:url url :inputs inputs :outputs outputs}))
 
 (defn main-process [urls not-headless?]
@@ -165,5 +166,6 @@
 ;;  (str supported-url-format "3")
 ;;  (str supported-url-format "4")
 ;;  (str supported-url-format "5")
-;;  (str supported-url-format "8"))
+;;  (str supported-url-format "8")
+;;  "-v")
 

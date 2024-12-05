@@ -107,10 +107,10 @@
   (env/env :OUTPUT_FILEPATH))
 
 (defn create-output-filepath [env-path]
-  (if (and env-path (str/ends-with? env-path "/"))
-    (str env-path default-output-filename)
-    (or (when  (not (str/blank? env-path)) env-path)
-        default-filepath)))
+  (cond
+    (str/blank? env-path) default-filepath
+    (str/ends-with? env-path "/") (str env-path default-output-filename)
+    :else env-path))
 
 (defn -main [& args]
   (let [validation-result (validate-args args)

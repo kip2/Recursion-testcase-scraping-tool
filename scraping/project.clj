@@ -10,5 +10,5 @@
                  [lynxeyes/dotenv "1.1.0"]]
   :main scraping.core
   :aot :all
-  :uberjar-name "Recursion-testcase-scraping.jar"
+  :uberjar-name "Recursion-scraping.jar"
   :repl-options {:init-ns scraping.core})

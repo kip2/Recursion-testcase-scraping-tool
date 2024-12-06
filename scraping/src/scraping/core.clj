@@ -27,7 +27,7 @@
   (e/fill driver {:tag :input :name :password} (str (env/env :USER_PASSWORD)))
   (e/click driver [{:id :loginModal} {:tag :button :type :submit}]))
 
-(defn- get-testcase-string [driver url]
+(defn- get-string [driver url]
   (e/wait driver 2)
   (e/go driver url)
   (e/get-element-text driver {:css "#object-creator-div > div.py-3.my-0.mr-0 > div.p-3.testcaseBox"}))
@@ -78,12 +78,12 @@
        data))
 
 
-(defn get-testcase-value [driver url]
-  (let [testcase-string (get-testcase-string driver url)
-        inputs (->  (extract-input-strings testcase-string)
+(defn get-value [driver url]
+  (let [string (get-string driver url)
+        inputs (->  (extract-input-strings string)
                     split-comma-into-list
                     parse-numbers)
-        outputs (-> (extract-output-strings testcase-string)
+        outputs (-> (extract-output-strings string)
                     split-comma-into-list
                     parse-numbers)]
     (println "Success! Retrieved the following URL: " url)
@@ -94,7 +94,7 @@
     (try
       (login driver)
 
-      (doall (map #(get-testcase-value driver %) urls))
+      (doall (map #(get-value driver %) urls))
       (catch Exception e
         (throw e))
       (finally (e/quit driver)))))
@@ -103,7 +103,7 @@
   (do (println "引数として、少なくとも1つのURLを指定してください。")
       (println "RecursionのURL形式のみ対応しています。")
       (println "RecursionのURL形式:" supported-url-format)
-      (println "使いかた: java -jar Recursion-testcase-scraping.jar https://recursionist.io/dashboard/problems/1")))
+      (println "使いかた: java -jar Recursion-scraping.jar https://recursionist.io/dashboard/problems/1")))
 
 (defn read-env-filepath []
   (env/env :OUTPUT_FILEPATH))
@@ -130,8 +130,8 @@
 (defn print-help [parsed-args]
   (do
     (println (get-in parsed-args [:summary]))
-    (println "使いかた: java -jar Recursion-testcase-scraping.jar https://recursionist.io/dashboard/problems/1")
-    (println "ファイルパス指定の場合: java -jar Recursion-testcase-scraping.jar input-file.txt")))
+    (println "使いかた: java -jar Recursion-scraping.jar https://recursionist.io/dashboard/problems/1")
+    (println "ファイルパス指定の場合: java -jar Recursion-scraping.jar input-file.txt")))
 
 (defn slurp-file [filepath]
   (with-open [rdr (io/reader filepath :encoding "UTF-8")]

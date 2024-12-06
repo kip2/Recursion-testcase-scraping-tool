@@ -130,8 +130,10 @@
 (defn print-help [parsed-args]
   (do
     (println (get-in parsed-args [:summary]))
-    (println "使いかた: java -jar Recursion-scraping.jar https://recursionist.io/dashboard/problems/1")
-    (println "ファイルパス指定の場合: java -jar Recursion-scraping.jar input-file.txt")))
+    (println "使いかた: ")
+    (println "java -jar Recursion-scraping.jar https://recursionist.io/dashboard/problems/1")
+    (println "ファイルパス指定の場合(UTF-8のファイルを指定してください。): ")
+    (println "java -jar Recursion-scraping.jar input-file.txt")))
 
 (defn slurp-file [filepath]
   (with-open [rdr (io/reader filepath :encoding "UTF-8")]

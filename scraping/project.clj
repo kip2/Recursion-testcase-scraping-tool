@@ -8,4 +8,7 @@
                  [cheshire "5.13.0"]
                  [etaoin "1.1.42"]
                  [lynxeyes/dotenv "1.1.0"]]
+  :main scraping.core
+  :aot :all
+  :uberjar-name "Recursion-testcase-scraping.jar"
   :repl-options {:init-ns scraping.core})

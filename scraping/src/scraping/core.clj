@@ -103,7 +103,7 @@
   (do (println "引数として、少なくとも1つのURLを指定してください。")
       (println "RecursionのURL形式のみ対応しています。")
       (println "RecursionのURL形式:" supported-url-format)
-      (println "使いかた: java -jar problem-value-scraping.jar https://recursionist.io/dashboard/problems/1")))
+      (println "使いかた: java -jar Recursion-testcase-scraping.jar https://recursionist.io/dashboard/problems/1")))
 
 (defn read-env-filepath []
   (env/env :OUTPUT_FILEPATH))
@@ -116,7 +116,9 @@
 
 (def cli-options
   [["-h" "--help" "Show help."]
-   ["-d" "--disabled-headless" "Disabled headless mode."]])
+   ["-d" "--disabled-headless" "Disabled headless mode."]
+   ["-f" "--file FILE" "Path to the input file."
+    :validate [#(.exists (clojure.java.io/file %)) "File must exist."]]])
 
 (defn parse-args [args]
   (let [{:keys [options arguments summary errors]} (cli/parse-opts args cli-options)]
@@ -125,47 +127,40 @@
      :summary summary
      :errors errors}))
 
+(defn print-help [parsed-args]
+  (do
+    (println (get-in parsed-args [:summary]))
+    (println "使いかた: java -jar Recursion-testcase-scraping.jar https://recursionist.io/dashboard/problems/1")
+    (println "ファイルパス指定の場合: java -jar Recursion-testcase-scraping.jar input-file.txt")))
+
+(defn slurp-file [filepath]
+  (with-open [rdr (io/reader filepath)]
+    (vec (line-seq rdr))))
+
+(defn print-validation-error [args]
+  (do
+    (println "RecursionのURL形式になっていません。")
+    (println "エラー対象の引数:" args)
+    (println "対応している形式: " supported-url-format)))
+
 (defn -main [& args]
   (let [parsed-args (parse-args args)
         help? (get-in parsed-args [:options :help])
+        file? (some? (get-in parsed-args [:options :file]))
         args (get-in parsed-args [:arguments])
-        not-headless? (get-in parsed-args [:options :verbose])]
-    (cond help? (println (get-in parsed-args [:summary]))
+        not-headless? (get-in parsed-args [:options :disabled-headless])]
+    (cond help? (print-help  parsed-args)
           :else
-          (let [validation-result (validate-args args)
+          (let [validation-error (validate-args args)
                 output-filepath (create-output-filepath (read-env-filepath))]
             (cond
-              (empty? args) (args-empty)
+              (and (false? file?) (empty? args)) (args-empty)
 
-              (not (true? validation-result))
-              (do
-                (println "RecursionのURL形式になっていません。")
-                (println "エラー対象の引数:" validation-result)
-                (println "対応している形式: " supported-url-format))
+              (not (true? validation-error)) (print-validation-error validation-error)
 
-              :else (let [value-map (main-process args not-headless?)]
+              :else (let [value-map (cond
+                                      file? (let  [input-filepath (get-in parsed-args [:options :file])
+                                                   args (slurp-file input-filepath)]
+                                              (main-process args not-headless?))
+                                      :else (main-process args not-headless?))]
                       (write-json-file value-map output-filepath)))))))
-
-; 引数なし
-(-main)
-
-;; 有効でないURLの引数
-(-main "https://recursionist.io/")
-
-;; (-main
-;;  (str supported-url-format "5")
-;;  "-d")
-
-;; (-main
-;;  (str supported-url-format "5"))
-
-;; 有効なURLの引数
-;; (-main
-;;  (str supported-url-format "1")
-;;  (str supported-url-format "2")
-;;  (str supported-url-format "3")
-;;  (str supported-url-format "4")
-;;  (str supported-url-format "5")
-;;  (str supported-url-format "8")
-;;  "-d")
-

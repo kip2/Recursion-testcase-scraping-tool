@@ -22,9 +22,9 @@
   (e/click driver [{:class :front-page} {:id :topNavigation} {:data-target :#loginModal}])
   (e/wait driver 5)
   (e/wait-visible driver [{:tag :input :name :email}])
-  (e/fill driver {:tag :input :name :email} (str (env/env :USER_NAME)))
+  (e/fill driver {:tag :input :name :email} (str (env/env :USER_EMAIL)))
   (e/wait-visible driver [{:tag :input :name :password}])
-  (e/fill driver {:tag :input :name :password} (str (env/env :PASSWORD)))
+  (e/fill driver {:tag :input :name :password} (str (env/env :USER_PASSWORD)))
   (e/click driver [{:id :loginModal} {:tag :button :type :submit}]))
 
 (defn- get-testcase-string [driver url]

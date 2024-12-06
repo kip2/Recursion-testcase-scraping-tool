@@ -1,12 +1,74 @@
 # scraping
 
 Recursionの問題の入出力データを、Webスクレイピングして取得するツールです。
+URLを指定して取得する方式です。
+テキストファイルなどにURLを定義し、読み込ませて取得することも可能です。
 
-## Prepare
+## 前提
+
+Recursionサイト内のデータ取得であるため、有料会員である必要があります。
+
+また、本ツールを用いて収集したデータを他人に配布することを禁止します。
+データが必要な場合は、必要な人がツールを使って個別に取得して下さい。
+
+## なぜ作ったのか？
+
+Recursionの問題を解く時、
+
+- 自分の慣れ親しんだエディタで問題を解きたい
+- Recursionのサイトでサポートしていないプログラミング言語を使いたい
+
+といったニーズに向けて開発しました(ﾀﾀﾞｼﾞﾌﾞﾝｶﾞﾔﾘﾀｶｯﾀﾀﾞｹｰ)。
+
+ローカルに問題の入出力を取得しておけば加工は自由です！
+JSON形式で作成されるため、各種言語のJSONライブラリから読み込みが可能です。
+
+あとは読み込んだ値を使用して、実行し、アウトプットとの確認をするだけです。
+
+なお、テストケースの読み込みと実行については、独自にテストライブラリやテスト実行用の関数などを書く必要があります。
+言語全てについて網羅するのは無理ですが、Clojureの例を挙げておきますので、参考にして作ってみてください。
+
+というより、みんな使い方のドキュメント書いて♥️
+もっとローカル実行環境整備の輪を広げようぜ！
+各言語でのやり方をまとめたドキュメントのプルリクエスト待ってます！
+
+- [ ] Clojureの場合の例をREADMEにして書いておく。
+
+---
+
+## 事前準備
+
+以下の準備が必要です。
+
+- Chromeのwebdriverのインストール
+- `.env`へのユーザー情報の入力
+
+### WebDriverのインストール
+
+スクレイピングツールとして、ChromeのWebDriverを使用してます。
+あらかじめChromeWebDriverをインストールしておいて下さい。
+
+筆者環境であるMacの場合のみ記載しておきます。
+他の環境については調べてください。
+
+Macの場合
+```sh
+bew install chromedriver
+```
+
+なお、本アプリは以下のバージョンでの確認を行っています。
+その他のバージョンについては動作未確認となっています(たぶん動くとは思いますが)。
+
+```sh
+ChromeDriver 131.0.6778.85
+```
+
+### .envへの環境情報の設定
 
 `.env`ファイルを用意し、Recursionのユーザー情報を記載してください。
+ログイン情報に使うため、必須の情報となります。
 
-```env
+```ini
 USER_EMAIL=your_email
 USER_PASSWORD=your_password
 ```
@@ -14,7 +76,7 @@ USER_PASSWORD=your_password
 また、ファイルはデフォルトで、jarと同じディレクトリに`testcase.json`という名前で作成されます。
 もし、特定のディレクトリに作成したい場合は、`.env`に以下のキーを記述してください。
 
-```env
+```ini
 # 何も設定しない場合はデフォルトのファイルパスに出力します
 OUTPUT_FILEPATH=
 # カレントディレクトリにtestcase.jsonという名前で出力します
@@ -22,26 +84,133 @@ OUTPUT_FILEPATH=
 
 # ファイルまで指定するとそのファイル名で出力します
 OUTPUT_FILEPATH="./a/b/c/filename.json"
+# "./a/b/c/filename.json"
 
 # ファイル名を指定しなければ、デフォルトの名前でセットされます
 OUTPUT_FILEPATH="./a/b/c/"
 # "./a/b/c/testcase.json"
 
-# なお、"で囲まなくても大丈夫です
+# なお、"で囲まなくても認識します
 OUTPUT_FILEPATH=./a/b/c/filename.json
+# "./a/b/c/filename.json"
 ```
+
+### jarファイルのダウンロード
+
+以下のURLからダウンロードして下さい。
+
+- [ ] jarのダウンロード方法
+
+---
 
 ## Usage
 
-FIXME
+### 使うための事前準備
+
+事前準備で作成した`.env`ファイルを、`jar`と同じディレクトリに配置して下さい。
+`jar`と違うディレクトリから`jar`を実行する場合は、カレントディレクトリに配置してください。
+実行時のユーザーのカレントディレクトリの`.env`ファイルを読み込みます。
+
+- [ ] JVMのバージョン？
+- [ ] jarファイルのダウンロードと`.env`ファイルの配置について
+
+### URLによる実行
+
+`jar`ファイルのため、以下のように実行してください。
+
+```sh
+java -jar Recursion-scraping.jar "https://recursionist.io/dashboard/problems/1"
+```
+
+複数のURL指定も可能です。
+
+```sh
+java -jar Recursion-scraping.jar "https://recursionist.io/dashboard/problems/1" "https://recursionist.io/dashboard/problems/2"
+```
+
+### fileからの読み込みによる実行
+
+複数のURLを引数に渡すことで、複数のURLからデータを取得できます。
+しかし、URLが数十になると指定が面倒です。
+
+その面倒を避けるため、ファイルからの読み込みにも対応しています。
+
+まず、ファイルに取得対象のURLを並べて記載してください。
+ファイルの注意事項としては以下になります。
+
+- ファイルはUTF-8のみ対応してます。
+- 一行にURLをひとつだけ、記載してください。
+
+なお、ファイル名は自由で構いません。お好き名前をつけてください。
+
+以下はファイルの例です。
+
+`scraping.txt`
+```
+https://recursionist.io/dashboard/problems/1
+https://recursionist.io/dashboard/problems/2
+https://recursionist.io/dashboard/problems/3
+https://recursionist.io/dashboard/problems/4
+https://recursionist.io/dashboard/problems/5
+```
+
+準備ができたら、以下のように実行してください。
+`-f`オプションのあとに、インプットファイルのファイルパスを指定してください。
+
+```sh
+# カレントディレクトリにinput-file.txtがある場合。
+java -jar Recursion-scraping.jar -f input-file.txt
+
+# input-file.txtが配置されたパスを指定すれば読み込みます。
+java -jar Recursion-scraping.jar -f ./a/b/c/input-file.txt
+```
+
+### headlessモードなしでの実行
+
+デフォルトではChrome WebDriverのヘッドレスモードが有効になっています。
+しかし、ヘッドレスモードだと、いつスクレイピングが終わったか分かりづらいなどの問題があるため、ヘッドレスモードを無効にする起動オプションも用意しています。
+
+以下のように、`-d`オプションをつけて起動して下さい。
+
+```sh
+# -dオプションを付けることでヘッドレスモードを無効にできます
+java -jar Recursion-scraping.jar "https://recursionist.io/dashboard/problems/1" -d
+
+# 順番は逆でも指定可能です
+java -jar Recursion-scraping.jar -d "https://recursionist.io/dashboard/problems/1"
+
+# ファイルからの読み込みでも指定可能です
+java -jar Recursion-scraping.jar -d -f input-file.txt
+```
+
+### help
+
+使い方に困ったらヘルプコマンドを実行してください。
+使い方が表示されます。
+
+```sh
+java -jar Recursion-scraping.jar -h
+```
+
+以下は出力の例です。
+```sh
+java -jar target/Recursion-scraping.jar -h
+  -h, --help               Show help.
+  -d, --disabled-headless  Disabled headless mode.
+  -f, --file FILE          Path to the input file.
+=== 使いかた ===
+java -jar Recursion-scraping.jar https://recursionist.io/dashboard/problems/1
+=== ファイルパス指定の場合(UTF-8のファイルのみ対応) ===
+java -jar Recursion-scraping.jar input-file.txt
+```
 
 ## 免責事項
 
 本ツールを利用したことにより発生した、利用者の損害及び利用者が第三者に与えた損害について、その損害が直接的又は間接的かを問わず、一切の責任を負いません。
 本ツールを用いて取得したデータを、他人に譲渡したりしないでください。
-あくまで個人的利用の範囲で利用してください。
+取得したデータは個人利用の範囲でご利用してください。
 
-また、スクレイピングはRecursionサーバーに負荷を与える可能性があります。
+また、スクレイピングはRecursionのサーバーに負荷を与える可能性があります。
 連続で使用したりせず、サーバーに負担のないよう、適切な間隔をあけて利用してください。
 
 ## License

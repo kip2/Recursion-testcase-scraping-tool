@@ -149,18 +149,19 @@
         file? (some? (get-in parsed-args [:options :file]))
         args (get-in parsed-args [:arguments])
         not-headless? (get-in parsed-args [:options :disabled-headless])]
-    (cond help? (print-help  parsed-args)
-          :else
-          (let [validation-error (validate-args args)
-                output-filepath (create-output-filepath (read-env-filepath))]
-            (cond
-              (and (false? file?) (empty? args)) (args-empty)
+    (cond
+      help? (print-help  parsed-args)
 
-              (not (true? validation-error)) (print-validation-error validation-error)
+      :else (let [validation-error (validate-args args)
+                  output-filepath (create-output-filepath (read-env-filepath))]
+              (cond
+                (and (false? file?) (empty? args)) (args-empty)
 
-              :else (let [value-map (cond
-                                      file? (let  [input-filepath (get-in parsed-args [:options :file])
-                                                   args (slurp-file input-filepath)]
-                                              (main-process args not-headless?))
-                                      :else (main-process args not-headless?))]
-                      (write-json-file value-map output-filepath)))))))
+                (not (true? validation-error)) (print-validation-error validation-error)
+
+                :else (let [value-map (cond
+                                        file? (let  [input-filepath (get-in parsed-args [:options :file])
+                                                     args (slurp-file input-filepath)]
+                                                (main-process args not-headless?))
+                                        :else (main-process args not-headless?))]
+                        (write-json-file value-map output-filepath)))))))

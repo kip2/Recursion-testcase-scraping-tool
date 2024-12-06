@@ -134,7 +134,7 @@
     (println "ファイルパス指定の場合: java -jar Recursion-testcase-scraping.jar input-file.txt")))
 
 (defn slurp-file [filepath]
-  (with-open [rdr (io/reader filepath)]
+  (with-open [rdr (io/reader filepath :encoding "UTF-8")]
     (vec (line-seq rdr))))
 
 (defn print-validation-error [args]

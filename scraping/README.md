@@ -7,8 +7,28 @@ Recursionの問題の入出力データを、Webスクレイピングして取�
 `.env`ファイルを用意し、Recursionのユーザー情報を記載してください。
 
 ```env
-USER_NAME=your_name
-PASSWORD=your_password
+USER_EMAIL=your_email
+USER_PASSWORD=your_password
+```
+
+また、ファイルはデフォルトで、jarと同じディレクトリに`testcase.json`という名前で作成されます。
+もし、特定のディレクトリに作成したい場合は、`.env`に以下のキーを記述してください。
+
+```env
+# 何も設定しない場合はデフォルトのファイルパスに出力します
+OUTPUT_FILEPATH=
+# カレントディレクトリにtestcase.jsonという名前で出力します
+# "./testcase.json"
+
+# ファイルまで指定するとそのファイル名で出力します
+OUTPUT_FILEPATH="./a/b/c/filename.json"
+
+# ファイル名を指定しなければ、デフォルトの名前でセットされます
+OUTPUT_FILEPATH="./a/b/c/"
+# "./a/b/c/testcase.json"
+
+# なお、"で囲まなくても大丈夫です
+OUTPUT_FILEPATH=./a/b/c/filename.json
 ```
 
 ## Usage

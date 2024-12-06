@@ -103,7 +103,8 @@
   (do (println "引数として、少なくとも1つのURLを指定してください。")
       (println "RecursionのURL形式のみ対応しています。")
       (println "RecursionのURL形式:" supported-url-format)
-      (println "使いかた: java -jar Recursion-scraping.jar https://recursionist.io/dashboard/problems/1")))
+      (println "=== 使い方 ===")
+      (println "java -jar Recursion-scraping.jar https://recursionist.io/dashboard/problems/1")))
 
 (defn read-env-filepath []
   (env/env :OUTPUT_FILEPATH))
@@ -130,9 +131,9 @@
 (defn print-help [parsed-args]
   (do
     (println (get-in parsed-args [:summary]))
-    (println "使いかた: ")
+    (println "=== 使いかた ===")
     (println "java -jar Recursion-scraping.jar https://recursionist.io/dashboard/problems/1")
-    (println "ファイルパス指定の場合(UTF-8のファイルを指定してください。): ")
+    (println "=== ファイルパス指定の場合(UTF-8のファイルのみ対応) ===")
     (println "java -jar Recursion-scraping.jar input-file.txt")))
 
 (defn slurp-file [filepath]

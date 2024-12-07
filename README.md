@@ -45,23 +45,24 @@ JSON形式で作成されるため、各種言語のJSONライブラリから読
 
 以下の準備が必要です。  
 
-- Chromeのwebdriverのインストール  
+- Chrome WebDriverのインストール  
 - `.env`へのユーザー情報の入力  
 
 ### WebDriverのインストール  
 
-スクレイピングツールとして、ChromeのWebDriverを使用してます。  
-あらかじめChromeWebDriverをインストールしておいて下さい。  
+スクレイピングツールとして、ChromeWebDriverを使用してます。  
+あらかじめChromeWebDriverをインストールしてください。  
 
-筆者環境であるMacの場合のみ記載しておきます。  
-他の環境については調べてください。  
+インストール方法は環境ごとに多岐にわたります。  
+参考として、筆者環境であるMacの場合のみ記載しておきます。  
+他の環境については各自で調べてインストールしてください。  
 
-Macのインストール例  
+Macのインストール例(Homebrew使用)  
 ```sh  
-bew install chromedriver  
+brew install chromedriver  
 ```  
 
-なお、本アプリは以下のバージョンでの確認を行っています。  
+なお、本ツールはChromeWebDriverの以下のバージョンで確認を行っています。  
 その他のバージョンについては動作未確認となっています(たぶん動くとは思いますが)。  
 
 ```sh  
@@ -71,14 +72,14 @@ ChromeDriver 131.0.6778.85
 ### .envへの環境情報の設定  
 
 `.env`ファイルを用意し、Recursionのユーザー情報を記載してください。  
-ログイン情報に使うため、必須の情報となります。  
+ログイン時の情報として使用するため、必須の情報となります。  
 
 ```ini  
 USER_EMAIL=your_email  
 USER_PASSWORD=your_password  
 ```  
 
-また、ファイルはデフォルトで、jarと同じディレクトリに`testcase.json`という名前で作成されます。  
+また、ファイルはデフォルトで`jar`と同じディレクトリに、`testcase.json`という名前で作成されます。  
 もし、特定のディレクトリに作成したい場合は、`.env`に以下のキーを記述してください。  
 
 ```ini  
@@ -95,10 +96,14 @@ OUTPUT_FILEPATH="./a/b/c/filename.json"
 OUTPUT_FILEPATH="./a/b/c/"  
 # "./a/b/c/testcase.json"  
 
-# なお、"で囲まなくても認識します  
+# なお、ダブルクォーテーション(")で囲まなくても認識します  
 OUTPUT_FILEPATH=./a/b/c/filename.json  
 # "./a/b/c/filename.json"  
 ```  
+
+### JVMのインストール
+
+本ツールは`jar`ファイルとなっているため、あらかじめJVMのインストールを行ってください。
 
 ### jarファイルのダウンロード  
 
@@ -106,21 +111,15 @@ OUTPUT_FILEPATH=./a/b/c/filename.json
 
 [Release page](https://github.com/kip2/Recursion-tools/releases/tag/v1.0.0)  
 
-### jarと.envの配置について
-
-作成した`.env`は、ダウンロードした`jar`と同じディレクトリに配置してください。
-
 ---  
 
 ## Usage  
 
 ### 使うための事前準備  
 
-事前準備で作成した`.env`ファイルを、`jar`と同じディレクトリに配置して下さい。  
+事前準備で作成した`.env`ファイルを、ダウンロードした`jar`と同じディレクトリに配置して下さい。  
 `jar`と違うディレクトリから`jar`を実行する場合は、カレントディレクトリに配置してください。  
 実行時のユーザーのカレントディレクトリの`.env`ファイルを読み込みます。  
-
-- [ ] JVMのバージョン？  
 
 ### URLによる実行  
 

@@ -50,8 +50,8 @@ JSON形式で作成されるため、各種言語のJSONライブラリから読
 
 ### WebDriverのインストール  
 
-スクレイピングツールとして、ChromeWebDriverを使用してます。  
-あらかじめChromeWebDriverをインストールしてください。  
+スクレイピング用に、ChromeWebDriverを使用してます。  
+ChromeWebDriverをインストールしてください。  
 
 インストール方法は環境ごとに多岐にわたります。  
 参考として、筆者環境であるMacの場合のみ記載しておきます。  
@@ -209,7 +209,7 @@ java -jar Recursion-scraping.jar -h
 
 以下は出力の例です。  
 ```sh  
-java -jar target/Recursion-scraping.jar -h  
+$ java -jar target/Recursion-scraping.jar -h  
   -h, --help               Show help.  
   -d, --disabled-headless  Disabled headless mode.  
   -f, --file FILE          Path to the input file.  

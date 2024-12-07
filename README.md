@@ -1,4 +1,4 @@
-# scraping
+# Recursion testcase scraping tool
 
 Recursionの問題の入出力データを、Webスクレイピングして取得するツールです。
 URLを指定して取得する方式です。

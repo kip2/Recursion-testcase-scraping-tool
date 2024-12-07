@@ -16,7 +16,7 @@ Recursionに迷惑をかけない範囲で、適切にご利用ください。
 
 ## なぜ作ったのか？
 
-Recursionの問題を解く時、
+Recursionの問題を解く時の、
 
 - 自分の慣れ親しんだエディタで問題を解きたい
 - Recursionのサイトでサポートしていないプログラミング言語を使いたい
@@ -100,9 +100,9 @@ OUTPUT_FILEPATH=./a/b/c/filename.json
 
 ### jarファイルのダウンロード
 
-以下のURLからダウンロードして下さい。
+以下のURLから`jar`ファイルをダウンロードして下さい。
 
-- [ ] jarのダウンロード方法
+[Release page](https://github.com/kip2/Recursion-tools/releases/tag/v1.0.0)
 
 ---
 

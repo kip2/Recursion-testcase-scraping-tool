@@ -113,7 +113,7 @@ OUTPUT_FILEPATH=./a/b/c/filename.json
 
 URLに移動し、画像に示す場所をクリックすれば、`jar`ファイルがダウンロードされます。  
 
-[jar-download](/pic/jar-download.png)
+![jar-download](/pic/jar-download.png)
 
 ---  
 

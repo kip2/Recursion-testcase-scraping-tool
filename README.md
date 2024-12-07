@@ -1,19 +1,19 @@
 # Recursion testcase scraping tool  
 
-学習プラットフォームRecursionで出題される問題の入出力データを、Webスクレイピングして取得するツールです。    
+学習プラットフォームRecursionで出題される問題の入出力データ(テストケース)をWebスクレイピングして取得するツールです。  
 
-URLを指定して取得する方式です。    
-テキストファイルなどにURLを定義し、読み込ませて取得することも可能です。    
+CLIからURLを引数で指定して取得し、JSONファイルに保存します。  
+また、引数で複数のURLを書いたテキストファイルを指定し、読み込ませて取得することも可能です。  
 
 ## 前提  
 
-Recursionサイト内のデータ取得であるため、有料会員である必要があります。  
+Recursionサイト内のデータを取得するツールであるため、有料会員である必要があります。  
 
-また、本ツールを用いて収集したデータを他人に配布することを禁止します。    
-データが必要な場合は、必要な人が、適宜ツールを使って個別に取得して下さい。    
+また、本ツールを用いて収集したデータを他人に配布することを禁止します。  
+データが必要な人が個別に取得して下さい。  
 
-なお、取得したデータの個人的な利用目的でのスクレイピングについては、Recursionから許可をいただいています。    
-Recursionに迷惑をかけない範囲で、適切に利用してください。    
+なお、個人的な利用目的でのスクレイピングによるデータ取得については、Recursionから許可をいただいています。  
+Recursionに迷惑をかけない範囲で、適切に利用してください。  
 
 ### なぜ作ったのか？  
 
@@ -33,7 +33,7 @@ JSON形式で作成されるため、各種言語のJSONライブラリから読
 言語全てについて網羅するのは無理ですが、Clojureの例を挙げておきます。  
 ローカルで実行したい人は、作るときの参考にしてください。  
 
-[Clojureを使ってローカル環境でテストする方法](/doc/Clojure.md)
+[Clojureを使ってローカル環境でテストする方法](/doc/Clojure.md)  
 
 というより、みんな使い方のドキュメント書いて♥️  
 もっとローカル実行環境整備の輪を広げようぜ！  
@@ -101,9 +101,9 @@ OUTPUT_FILEPATH=./a/b/c/filename.json
 # "./a/b/c/filename.json"  
 ```  
 
-### JVMのインストール
+### JVMのインストール  
 
-本ツールは`jar`ファイルとなっているため、あらかじめJVMのインストールを行ってください。
+本ツールは`jar`ファイルとなっているため、あらかじめJVMのインストールを行ってください。  
 
 ### jarファイルのダウンロード  
 
@@ -138,7 +138,7 @@ java -jar Recursion-scraping.jar "https://recursionist.io/dashboard/problems/1" 
 ### fileからの読み込みによる実行  
 
 複数のURLを引数に渡すことで、複数のURLからデータを取得できます。  
-2，3個くらいのURLであれば、引数から渡してください。
+2，3個くらいのURLであれば、引数から渡してください。  
 
 しかし、URLが数十指定するとなると、面倒です。  
 その面倒を避けるため、ファイルからの読み込みにも対応しています。  
@@ -173,12 +173,12 @@ java -jar Recursion-scraping.jar -f input-file.txt
 java -jar Recursion-scraping.jar -f ./a/b/c/input-file.txt  
 ```  
 
-以下は補足。
+以下は補足。  
 hLinux系のOSであれば`xargs`コマンドを使用すれば、パイプ処理で渡すことも可能です。  
 
-```sh
-cat input-file.txt | xargs java -jar Recursion-scraping.jar 
-```
+```sh  
+cat input-file.txt | xargs java -jar Recursion-scraping.jar   
+```  
 
 ### headlessモードなしでの実行  
 
@@ -210,9 +210,9 @@ java -jar Recursion-scraping.jar -h
 以下は出力の例です。  
 ```sh  
 $ java -jar target/Recursion-scraping.jar -h  
-  -h, --help               Show help.  
+  -h, --help         Show help.  
   -d, --disabled-headless  Disabled headless mode.  
-  -f, --file FILE          Path to the input file.  
+  -f, --file FILE      Path to the input file.  
 === 使いかた ===  
 java -jar Recursion-scraping.jar https://recursionist.io/dashboard/problems/1  
 === ファイルパス指定の場合(UTF-8のファイルのみ対応) ===  

@@ -8,6 +8,7 @@
    [dotenv :as env]
    [etaoin.api :as e]))
 
+
 ;; url format
 (def supported-url-format "https://recursionist.io/dashboard/problems/")
 
@@ -106,7 +107,7 @@
       (println "=== 使い方 ===")
       (println "java -jar Recursion-scraping.jar https://recursionist.io/dashboard/problems/1")))
 
-(defn read-env-filepath []
+(defn read-output-filepath []
   (env/env :OUTPUT_FILEPATH))
 
 (defn create-output-filepath [env-path]
@@ -156,7 +157,7 @@
       help? (print-help  parsed-args)
 
       :else (let [validation-error (validate-args args)
-                  output-filepath (create-output-filepath (read-env-filepath))]
+                  output-filepath (create-output-filepath (read-output-filepath))]
               (cond
                 (and (false? file?) (empty? args)) (args-empty)
 
@@ -168,3 +169,7 @@
                                                 (main-process args not-headless?))
                                         :else (main-process args not-headless?))]
                         (write-json-file value-map output-filepath)))))))
+
+;; (-main "-d" "https://recursionist.io/dashboard/problems/1")
+
+

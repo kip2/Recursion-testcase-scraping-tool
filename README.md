@@ -53,7 +53,18 @@ JSON形式で作成されるため、各種言語のJSONライブラリから読
 ### WebDriverのインストール  
 
 スクレイピング用に、ChromeWebDriverを使用してます。  
-ChromeWebDriverをインストールしてください。  
+ChromeWebDriverをインストールが必要です。  
+
+まずWebDriverを動かすためにGoogle Chromeが必要なので、公式サイトの手順に従ってインストールして下さい。  
+
+[Google Chrome ダウンロードページ](https://www.google.com/intl/ja_jp/chrome/)  
+
+次にWebDriverをインストールして下さい。
+
+なお、WebDriverはブラウザのバージョンと一致している必要があるようです。
+[Google WebDriver ダウンロードページ](https://developer.chrome.com/docs/chromedriver/downloads?hl=ja)
+
+また、パスを通す必要があるので、パスを通してください。
 
 インストール方法は環境ごとに多岐にわたります。  
 参考として、筆者環境であるMacの場合のみ記載しておきます。  
@@ -105,7 +116,9 @@ OUTPUT_FILEPATH=./a/b/c/filename.json
 
 ### JVMのインストール  
 
-本ツールは`jar`ファイルとなっているため、あらかじめJVMのインストールを行ってください。  
+本ツールは`jar`ファイルによる配布となっているため、あらかじめJRE、もしくはJDKのインストールを行ってください。  
+
+JVM系の言語を使用する人であればJDKが入っていると思いますが、その他の人はJREで大丈夫です。
 
 ### jarファイルのダウンロード  
 

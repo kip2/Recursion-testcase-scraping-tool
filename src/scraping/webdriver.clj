@@ -2,7 +2,9 @@
   (:import [org.openqa.selenium WebDriver]
            [io.github.bonigarcia.wdm WebDriverManager]
            [org.openqa.selenium.chrome ChromeDriver]
-           [org.openqa.selenium.chrome ChromeOptions]))
+           [org.openqa.selenium.chrome ChromeOptions])
+  (:require
+   [etaoin.api :as e]))
 
 (defn get-browser-path []
   (let [manager (WebDriverManager/chromedriver)

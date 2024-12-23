@@ -93,6 +93,7 @@
     {:url url :inputs inputs :outputs outputs}))
 
 (defn main-process [urls not-headless?]
+  "スクレイピングを行う関数"
   (let [driver (if not-headless?  (e/chrome) (e/chrome {:args ["--headless"]}))]
     (try
       (login driver)

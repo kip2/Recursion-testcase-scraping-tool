@@ -48,9 +48,11 @@
     (map extract-inside-parens list-string)))
 
 (defn validate-url [url]
+  "urlがRecursionの問題ページの形式になっているかを判定する関数"
   (not= nil (re-matches #"https?://recursionist.io/dashboard/problems/.*" url)))
 
 (defn validate-args [args]
+  "引数のURL形式が正しいか判定し、正しくないものが含まれていた場合はそのURLを返す関数"
   (or (some #(when (not (validate-url %)) %) args) true))
 
 (defn split-comma-into-list [data]

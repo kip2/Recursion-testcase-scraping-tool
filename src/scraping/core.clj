@@ -103,6 +103,7 @@
       (finally (e/quit driver)))))
 
 (defn args-empty []
+  "引数指定が足りない場合のメッセージを表示する関数"
   (do (println "引数として、少なくとも1つのURLを指定してください。")
       (println "RecursionのURL形式のみ対応しています。")
       (println "RecursionのURL形式:" supported-url-format)
@@ -110,9 +111,11 @@
       (println "java -jar Recursion-scraping.jar https://recursionist.io/dashboard/problems/1")))
 
 (defn read-output-filepath []
+  ".envからアウトプットファイルパスを読み込む関数"
   (env/env :OUTPUT_FILEPATH))
 
 (defn create-output-filepath [env-path]
+  "env-pathの形式の違いによって、デフォルトパスを追加して返す関数"
   (cond
     (str/blank? env-path) default-filepath
     (str/ends-with? env-path "/") (str env-path default-output-filename)
@@ -125,6 +128,7 @@
     :validate [#(.exists (clojure.java.io/file %)) "File must exist."]]])
 
 (defn parse-args [args]
+  "引数をパースする関数"
   (let [{:keys [options arguments summary errors]} (cli/parse-opts args cli-options)]
     {:options options
      :arguments arguments
@@ -132,6 +136,7 @@
      :errors errors}))
 
 (defn print-help [parsed-args]
+  "helpについて表示する関数"
   (do
     (println (get-in parsed-args [:summary]))
     (println "=== 使いかた ===")
@@ -140,10 +145,12 @@
     (println "java -jar Recursion-scraping.jar input-file.txt")))
 
 (defn slurp-file [filepath]
+  "ファイルをUTF-8で読み込む関数"
   (with-open [rdr (io/reader filepath :encoding "UTF-8")]
     (vec (line-seq rdr))))
 
 (defn print-validation-error [args]
+  "引数がRecursionのURL形式になっていない旨を表示する関数"
   (do
     (println "RecursionのURL形式になっていません。")
     (println "エラー対象の引数:" args)

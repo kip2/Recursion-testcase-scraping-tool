@@ -154,6 +154,7 @@
         args (get-in parsed-args [:arguments])
         not-headless? (get-in parsed-args [:options :disabled-headless])]
     (cond
+      ;; オプションでhelpが指定されているなら、helpを表示して終了する。
       help? (print-help  parsed-args)
 
       :else (let [validation-error (validate-args args)
@@ -161,7 +162,7 @@
               (cond
                 (and (false? file?) (empty? args)) (args-empty)
 
-                (not (true? validation-error)) (print-validation-error validation-error)
+                (false? validation-error) (print-validation-error validation-error)
 
                 :else (let [value-map (cond
                                         file? (let  [input-filepath (get-in parsed-args [:options :file])

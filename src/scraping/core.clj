@@ -60,12 +60,14 @@
   (or (some #(when (not (validate-url %)) %) args) true))
 
 (defn split-comma-into-list [data]
+  "カンマ区切りの文字列をリストに切り出す関数"
   (map #(if (str/includes? % ",")
           (str/split % #",")
           %)
        data))
 
 (defn write-json-file [data filepath]
+  "dataをjsonに出力する関数"
   (let [dir (io/file (.getParent (io/file filepath)))]
     (when (not (.exists dir))
       (.mkdirs dir))
@@ -86,6 +88,7 @@
 
 
 (defn get-value [driver url]
+  "取得対象の情報をスクレイピングして取得する関数"
   (let [string (get-string driver url)
         inputs (->  (extract-input-strings string)
                     split-comma-into-list

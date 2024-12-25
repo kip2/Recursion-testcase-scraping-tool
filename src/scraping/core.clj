@@ -17,6 +17,7 @@
 (def default-output-filename "testcase.json")
 
 (defn- login [driver]
+  "Recursionへのログインを行う関数"
   (e/go driver "https://recursionist.io/")
   (e/set-window-size driver {:width 1280 :height 800})
   (e/wait-visible driver [{:class :front-page} {:id :topNavigation} {:data-target :#loginModal}])
@@ -29,6 +30,7 @@
   (e/click driver [{:id :loginModal} {:tag :button :type :submit}]))
 
 (defn- get-string [driver url]
+  "Recursionの問題ページから、入出力データを取得する関数"
   (e/wait driver 2)
   (e/go driver url)
   (e/get-element-text driver {:css "#object-creator-div > div.py-3.my-0.mr-0 > div.p-3.testcaseBox"}))

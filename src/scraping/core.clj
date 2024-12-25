@@ -86,6 +86,15 @@
             (catch Exception _ %)))
        data))
 
+(defn numeric? [s]
+  "文字列が数字によって構成されているかを判定する関数"
+  (boolean (re-matches #"\d+" s)))
+
+(defn extract-last-char-from-path [url]
+  "URLの最後の文字列が数字の場合に取得する関数"
+  (let [path-id (last (str/split url #"/"))]
+    (cond (numeric? path-id) path-id
+          :else nil)))
 
 (defn get-value [driver url]
   "取得対象の情報をスクレイピングして取得する関数"

@@ -2,6 +2,27 @@
   (:require [clojure.test :refer :all]
             [scraping.core :refer :all]))
 
+(deftest extract-last-char-from-path-test
+  (testing
+   (is (= (extract-last-char-from-path "https://aaa/bbb/ccc/") nil))
+    (is (= (extract-last-char-from-path "https://aaa/bbb/ccc") nil))
+    (is (= (extract-last-char-from-path "https://aaa/bbb/ccc/1") "1"))))
+
+(deftest numeric?-test
+  (testing
+   (is (= (numeric? "123") true))
+    (is (= (numeric? "-123") false))
+    (is (= (numeric? "0") true))
+    (is (= (numeric? "-0") false))
+    (is (= (numeric? "001") true))
+    (is (= (numeric? "-001") false))
+    (is (= (numeric? "abc") false))
+    (is (= (numeric? "12a3") false))
+    (is (= (numeric? "") false))
+    (is (= (numeric? "-") false))
+    (is (= (numeric? "2") true))))
+
+
 (deftest extract-after-allow-test
   (testing
    (is (= (extract-after-allow "--> test") "test"))

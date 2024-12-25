@@ -78,6 +78,7 @@
 
 
 (defn parse-numbers [data]
+  "シーケンスの中の数字のみをintやfloatに変換する関数"
   (map #(if (sequential? %)
           (parse-numbers %)
           (try

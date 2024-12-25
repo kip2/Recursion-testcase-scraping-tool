@@ -104,9 +104,10 @@
                     parse-numbers)
         outputs (-> (extract-output-strings string)
                     split-comma-into-list
-                    parse-numbers)]
+                    parse-numbers)
+        id (extract-last-char-from-path url)]
     (println "Success! Retrieved the following URL: " url)
-    {:url url :inputs inputs :outputs outputs}))
+    {:id id :url url :inputs inputs :outputs outputs}))
 
 (defn main-process [urls not-headless?]
   "スクレイピングを行う関数"

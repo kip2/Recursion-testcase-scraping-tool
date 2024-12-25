@@ -34,16 +34,20 @@
   (e/get-element-text driver {:css "#object-creator-div > div.py-3.my-0.mr-0 > div.p-3.testcaseBox"}))
 
 (defn extract-after-allow [s]
+  "--> ()の形式の文字列から、()の中身を取得する関数"
   (second (re-find #"--> (.*)"  s)))
 
 (defn- extract-output-strings [s]
+  "取得対象であるテストケースの出力の値を切り出す関数"
   (let [list-string (clojure.string/split-lines s)]
     (map extract-after-allow list-string)))
 
 (defn extract-inside-parens [s]
+  "カッコの中の文字列を切り出す関数"
   (second (re-find #"\((.*?)\)" s)))
 
 (defn- extract-input-strings [s]
+  "取得対象であるテストケースの入力の値を切り出す関数"
   (let [list-string (clojure.string/split-lines s)]
     (map extract-inside-parens list-string)))
 

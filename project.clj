@@ -7,7 +7,8 @@
                  [etaoin "1.1.42"]
                  [io.github.bonigarcia/webdrivermanager "5.9.2"]
                  [org.seleniumhq.selenium/selenium-java "4.10.0"]
-                 [lynxeyes/dotenv "1.1.0"]]
+                 [lynxeyes/dotenv "1.1.0"]
+                 [clj-http/clj-http "3.13.0"]]
   :main scraping.core
   :aot :all
   :uberjar-name "Recursion-scraping.jar"
